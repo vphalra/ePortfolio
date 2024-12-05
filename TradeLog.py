@@ -1,7 +1,4 @@
 """
-Langvid Phalra
-CS 521 - Fall 2024
-Term Project
 This is a class to handle trade logging functionality with specified fields.
 """
 
