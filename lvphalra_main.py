@@ -1,7 +1,4 @@
 """
-Langvid Phalra
-CS 521 - Fall 2024
-Term Project
 This script provides a menu-driven interface for interacting with the TradeLog class.
 """
 
