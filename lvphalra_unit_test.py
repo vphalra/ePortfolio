@@ -1,7 +1,4 @@
 """
-Langvid Phalra
-CS 521 - Fall 2024
-Term Project
 This script contains unit tests to validate the functionality of the TradeLog class.
 """
 
