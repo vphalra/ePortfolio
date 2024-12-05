@@ -13,7 +13,7 @@ library(caret)
 library(randomForest)
 library(xgboost)
 
-# Load and explore the Ames Housing dataset
+# Loading the Ames Dataset
 data <- AmesHousing::make_ames()
 str(data)
 summary(data)
