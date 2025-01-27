@@ -1,0 +1,239 @@
+/* Add Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700&display=swap');
+
+/* General Styles */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-family: 'Nunito', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Main Content Stretch */
+main {
+    flex: 1;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: 700; /* Bold for emphasis */
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    font-size: 1rem;
+    padding: 5px 10px;
+    font-weight: 500; /* Medium weight for readability */
+}
+
+/* Header */
+header {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.9rem;
+}
+
+/* Profile Image */
+.profile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Container */
+.custom-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Links */
+.black-link {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.black-link:hover {
+    text-decoration: underline;
+}
+
+/* Form Container */
+.form-container {
+    max-width: 500px;
+    margin: 40px ;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h1, h2 {
+    font-weight: 700; /* Bold for prominence */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form Elements */
+.form-label {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.form-control {
+    font-size: 1rem;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+.btn {
+    font-size: 1rem;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+/* Cards */
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.card h5 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 10px;
+    font-weight: 400;
+    flex-grow: 1; /* Fills the space to align content properly */
+}
+
+.card .btn {
+    align-self: flex-end;
+    margin-top: auto;
+
+.card-container h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1d4ed8; /* Vibrant blue for emphasis */
+    margin-bottom: 10px;
+}
+
+/* Price */
+.card-container .predicted-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #16a34a; /* Green for positivity */
+    margin-bottom: 20px;
+}
+
+/* Prediction Card */
+.prediction-card {
+    background-color: #ffffff; /* Clean white card */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Elevated shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover animation */
+}
+
+.prediction-card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2); /* Darker shadow */
+}
+
+.prediction-card h3 {
+    font-size: 2rem; /* Larger title font */
+    color: #0d6efd; /* Vibrant blue color */
+    margin-bottom: 20px;
+}
+
+.prediction-card .predicted-price {
+    font-size: 2.2rem; /* Large price display */
+    color: #198754; /* Green for positivity */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.prediction-card .btn {
+    font-size: 1rem; /* Standard button font size */
+    font-weight: 600;
+    padding: 12px 20px; /* Larger padding for a polished look */
+    border-radius: 8px; /* Rounded buttons */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.prediction-card .btn:hover {
+    transform: translateY(-3px); /* Button lift effect */
+}
+
+.prediction-card .btn-primary {
+    background-color: #0d6efd; /* Vibrant blue */
+    border: none;
+}
+
+.prediction-card .btn-primary:hover {
+    background-color: #0b5ed7; /* Slightly darker blue */
+}
+
+.prediction-card .btn-secondary {
+    background-color: #6c757d; /* Neutral secondary button */
+    border: none;
+}
+
+.prediction-card .btn-secondary:hover {
+    background-color: #5a6268; /* Slightly darker secondary button */
+}
