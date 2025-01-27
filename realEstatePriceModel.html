@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ames Property Price Model</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        h2, h4 {
+            text-align: center;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+
+
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">ePortfolio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/aboutMe">About Me</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/ePortfolio">ePortfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/gitHub" target="_blank">GitHub</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Header -->
+<header class="bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-6 mb-3 fw-semibold">Modeling Real Estate Price (Ames, IA)</h1>
+        <p class="lead mb-0">Understanding Real Estate Pricing Through Data</p>
+    </div>
+</header>
+<!-- End Header -->
+
+<!-- Main Content -->
+<main class="container my-5">
+    <!-- Project Overview Section -->
+    <section id="overview" class="mb-4">
+        <p>
+            The intention of project is to transform and utilize the
+            <a href="https://jse.amstat.org/v19n3/decock.pdf" target="_blank">Ames Housing Dataset</a>
+            to understand how different property features affect Sale Price.
+        </p>
+        <p>Full code in <a href="https://github.com/vphalra/machine_learning" target="_blank">GitHub Repository</a></p>
+    </section>
+    <hr>
+
+    <!-- Dataset Overview Section -->
+    <section id="data-selection" class="mb-4">
+        <p>
+            The Ames Housing dataset contains 2930 observations of sold residential properties from 2006 - 2010.
+            (Ames, IA)
+        <p><strong>Data Structure</strong></p>
+        <ul>
+            <li>82 variables</li>
+            <li>Sale Price as Dependent Variable</li>
+            <li><a
+                    href="https://jse.amstat.org/v19n3/decock/DataDocumentation.txt"
+                    target="_blank">See All Variables Here</a></li>
+        </ul>
+            </p>
+    </section>
+    <hr>
+
+    <section id="hypothesis" class="mb-4">
+        <p>
+            To anchor this project, we can make the following assumption using domain knowledge:
+        </p>
+        <ul>
+            <li><strong>Property Size:</strong> Larger properties will likely command higher sale prices.</li>
+            <li><strong>Neighborhood:</strong> Properties located in premium neighborhoods will be priced higher due to
+                demand and amenities.
+            </li>
+            <li><strong>Overall Quality:</strong> Building material quality and property condition will play a
+                significant role in determining the price.
+            </li>
+            <li><strong>Year Built:</strong> Newly constructed or recently renovated properties will tend to have higher
+                prices compared to older ones.
+            </li>
+            <li><strong>Garage Size:</strong> Larger garages may increase a property's value due to added utility.</li>
+        </ul>
+        <p>
+            This can be translated into the following Null Hypotheses:
+        </p>
+        <ul>
+            <li>H₀ = Property size is not a significant predictor of price.</li>
+            <li>H₀ = Neighborhood is not a significant predictor of price.</li>
+            <li>H₀ = Overall quality is not a significant predictor of price</li>
+            <li>H₀ = Age of property is not a significant predictor of price.</li>
+            <li>H₀ = Garage capacity is not a significant predictor of price</li>
+        </ul>
+        <p></p>
+    </section>
+    <hr>
+
+    <!-- Data Preparation Section -->
+    <section id="data-preparation" class="mb-5">
+        <h4>Data Treatment & Cleaning</h4>
+        <br>
+
+        <!-- Step 1: Calculate Growth Rate -->
+        <h5>1. Calculating Growth Rate Using Median Sale Price (2006–2024)</h5>
+        <p>
+        <p>
+            The growth rate of property values was calculated using the compound annual growth rate (CAGR) formula:
+        </p>
+        <ul>
+            <li>
+                <em>
+                    CAGR = (Median Sale Price (2024) / Median Sale Price (2006))^(1 / Years) - 1
+                </em>
+            </li>
+        </ul>
+
+
+        <!-- Step 2: Compounding Sale Price -->
+        <h5>2. Compounding Sale Price Using Growth Rate</h5>
+        <p>
+            Using the calculated growth rate, the future value of sale prices was forecasted using the formula:
+        </p>
+        <p>
+        <ul>
+            <li>
+                <em>
+                    Future Value = Current Sale Price × (1 + Growth Rate)^Years
+                </em>
+            </li>
+        </ul>
+
+        </p>
+
+        <!-- Step 3: Cleaning Data -->
+        <h5>3. Cleaning Data</h5>
+        <ul>
+            <li>
+                <strong>Imputing Missing Values:</strong>
+                Missing values were treated as follows, based on validation using other variables in the dataset:
+                <ul>
+                    <li>Numerical features (e.g., <em>GarageArea</em>, <em>BsmtFinSF1</em>) were filled with
+                        <strong>0</strong> when the absence of a feature (e.g., no garage or no basement) was confirmed.
+                    </li>
+                    <li>Categorical features (e.g., <em>PoolQC</em>, <em>MiscFeature</em>) were filled with
+                        <strong>None</strong> when the missing values represented the absence of that feature (e.g., no
+                        pool or no shed).
+                    </li>
+                    <li>For features dependent on neighborhoods (e.g., <em>LotFrontage</em>), missing values were
+                        imputed with the median value of the neighborhood to account for local variation.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>Feature Engineering:</strong>
+                Three variables were engineered:
+                <ul>
+                    <li>TotalSQFT: Sum of <em>GrLivArea</em> and <em>TotalBsmtSF</em>.</li>
+                    <li>Decade Built: Calculated as the floor division of <em>Year Built</em> by 10, multiplied by 10
+                    </li>
+                    <li>TotalBaths: Sum of full and half bathrooms, including basement bathrooms:</li>
+                    <ul>
+                        <li>FullBath + (0.5 × HalfBath) + BsmtFullBath + (0.5 × BsmtHalfBath)</li>
+                    </ul>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- Step 4: Encoding Features -->
+        <h5>4. Encoding Features</h5>
+        <ul>
+            <li>
+                <strong>Nominal Features:</strong> One-hot encoding was applied using <em>pd.get_dummies</em> to handle
+                variables such as <em>Neighborhood</em> and <em>Exterior1st</em>.
+            </li>
+            <li>
+                <strong>Ordinal Features:</strong> Custom mappings were applied to features like <em>ExterQual</em> and
+                <em>KitchenQual</em> to encode their ordinal nature:
+                <ul>
+                    <li>ExterQual Mapping: Excellent (5), Good (4), Average (3), Fair (2), Poor (1).</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+
+    <hr>
+    <!-- Understanding the Data Section -->
+    <section id="understanding-data" class="mb-5">
+
+        <!-- Summary Statistics -->
+        <div class="mt-4">
+            <h4 class='mb-3'>Understanding the Dataset</h4>
+            <p>
+                To gain a contextual understanding of the dataset and sale price, let's first compare the summary
+                statistics
+                of the original sale price and the adjusted sale price.
+            </p>
+            <img src="{{ url_for('static', filename='images/originalSalePriceSummaryStats.png') }}"
+                 alt="Descriptive Statistics for Sale Price" class="img-fluid rounded shadow">
+            <br>
+            <img src="{{ url_for('static', filename='images/AdjustedSalePriceSummaryStats.png') }}"
+                 alt="Descriptive Statistics for Sale Price" class="img-fluid rounded shadow">
+            <br>
+            <p>
+                Observing these two charts, we can identify significant outliers on both end of the spectrum.
+                However, the typical price of properties often range between 130-200k for the orignal sale price and
+                200-300k for the adjusted sale price.
+            </p>
+            <p>Just gleaning from this information we can make an assumption that Ames properties would fall in the
+                category of
+                affordable housing. Just as a note, moving forward any sale price will be referring to the adjusted sale
+                price. </p>
+            <p>Let's also visualize the distribution of the sale price to see if we can glean any additional
+                insights:</p>
+        </div>
+
+        <img src="{{ url_for('static', filename='images/adjustedSalePriceDistribution.png') }}"
+             alt="Distribution of Sale Price" class="img-fluid rounded shadow">
+        <br>
+        <p>Based on the distribution curve, we can observe:</p>
+        <ul>
+            <li>A majority of the properties have sale prices concentrated in the lower to mid-price range.</li>
+            <li>A right skew; indicating outliers of high-value properties that exceed the typical price range.</li>
+            <li>The mode appears to be around the $200,000 - $250,000 region; suggesting this is the most common range
+                for
+                property sale prices.
+            </li>
+            <li>An outlier property reached a sale value of $1.2 million; although such cases are scarce.</li>
+        </ul>
+
+        <!-- Scatter Plot Visualization -->
+
+        <p>Now let's visualize the relationship between TotalSQFT and Sale Price:</p>
+
+        <img src="{{ url_for('static', filename='images/totalSqftSalePrice.png') }}"
+             alt="Scatter Plot of Total SQFT vs Sale Price" class="img-fluid rounded shadow">
+        <br>
+        <p>Based on the scatter plot above, we can observe:
+        <ul>
+            <li>A positive correlation; there is a clear positive trend where an increase in total square footage
+                generally correlates with a high sale price. Though, it is important to note that there is some
+                variability.
+            </li>
+            <li>The data points are densely clustered around smaller property sizes (1,000–3,000 SQFT) and lower sale
+                prices
+                ($100,000–$400,000). This reflects the most common property size and price range in the dataset.
+            </li>
+            <li>
+                For properties below 3,000 SQFT, the relationship between size and price is tighter and more consistent,
+                while larger
+                properties show greater variability in sale prices, likely influenced by other variables.
+            </li>
+            <li>Although this chart alone is not sufficient evidence, it does suggest rejecting the null hypothesis that
+                property size does not affect sale price.
+            </li>
+            <li>We will validate its significance later when we conduct our regression analysis.</li>
+        </ul>
+        <p>Next, let's take a look at the relationship between neighborhoods and sale price:</p>
+        <img src="{{ url_for('static', filename='images/neighborhoodSalePrice.png') }}"
+             alt="Box Plot of Neighborhood and Sale Price" class="img-fluid rounded shadow">
+        <br>
+        <p>Based on the boxplot above, we can observe:</p>
+        <ul>
+            <li>Variation in sale price varies across different neighborhoods.</li>
+            <li>Neighborhoods like StoneBr (Stone Brook), NridgHt (Northridge Heights), and NoRidge (Northridge) have
+                higher median sale prices, indicating they
+                are luxury or high-value areas.
+            </li>
+            <li>Whereas Neighborhoods like MeadowV (Meadow Village), BrDale (Briardale), and Edwards have lower median
+                sale
+                prices,
+                suggesting affordability.
+            </li>
+            <li>Wide IQRs (e.g., NridgHt, NoRidge) suggest high variability in sale prices, likely due to diverse
+                property
+                features.
+            </li>
+            <li>Narrow IQRs (e.g., BrDale, MeadowV) indicate uniform property values within those neighborhoods.</li>
+            <li>The box plot suggests rejecting the null hypothesis (H₀), as neighborhood significantly impacts sale
+                price.
+            </li>
+            <li>To verify this suggestion, a one-way ANOVA test was conducted using Neighborhood as the categorical
+                independent variable and Sale Price as the dependent variable.
+            </li>
+            <li>The resulting p-value = 0.0 which validates the neighborhood's statistical significance; hence the
+                neighborhood's H₀ can be rejected.
+            </li>
+        </ul>
+        <p>Moving on, let's visualize the relationship between overall quality and sale price:</p>
+        <img src="{{ url_for('static', filename='images/qualitySalePrice.png') }}"
+             alt="Box Plot of Neighborhood and Sale Price" class="img-fluid rounded shadow">
+        <br>
+        <p>Based on the boxplot above, we can observe:</p>
+        <ul>
+            <li>A strong positive relationship between quality and sale price</li>
+            <li>Properties with Overall Quality = 2 have very low sale prices.</li>
+            <li>Properties with Overall Quality = 10 have significantly higher median sale prices.</li>
+            <li>As the overall quality improves, the spread (range) of sale prices also increases; likely influenced by
+                other variables.
+            </li>
+            <li>There are notable outliers in several quality levels (e.g., 5, 7, 8, and 10), indicating that some
+                properties sell for much higher or lower prices than expected within those categories; potentially
+                indicating that they might belong to different market segments or is inclusive of special features.
+            </li>
+            <li>Overall, a one-way ANOVA test confirms Overall Quality's statistical significance with a p-value = 0.0,
+                therefore, reject H₀.
+            </li>
+        </ul>
+        <p>Moving on to Year Built:</p>
+        <img src="{{ url_for('static', filename='images/yearBuiltSalePrice.png') }}"
+             alt="Box Plot of Neighborhood and Sale Price" class="img-fluid rounded shadow">
+        <br>
+        <p>Based on the box plot above, we can observe: </p>
+        <ul>
+            <li>Sale prices generally increase for properties built in more recent decades, with a noticeable upward
+                trend
+                starting from 1980s onwards.
+            </li>
+            <li>Median sale prices for properties built in the 2000s are significantly higher compared to earlier
+                decades;
+                suggesting a preference for recently built properties.
+            </li>
+            <li>Older properties (pre-1940) have a narrower range of sale prices, indicating more uniform pricing;
+                with exclusion of 1880, potentially due to recent renovation.
+            </li>
+            <li>Variances in outliers begins to a become more pronounced from 1980s onwards as evidenced
+                by the taller boxplots and longer whiskers.
+            </li>
+            <li>An ANOVA test confirms our suspicion that Decade Built is a statistically significant predictor of
+                price.
+                Reject H₀.
+            </li>
+        </ul>
+        <p>Lastly, lets visualize the relationship between garage capacity and sale price:</p>
+        <img src="{{ url_for('static', filename='images/garageCars.png') }}"
+             alt="garageCars" class="img-fluid rounded shadow">
+        <br>
+        <p>
+            Based on the scatter plot above we can observe:
+        <ul>
+            <li>There is a positive correlation whereby a higher garage capacity is associated with higher-value
+                properties.
+            </li>
+            <li>Properties with no garage are clustered at the lower end of sale prices, indicating that garage space
+                is a salient feature when determining home value
+            </li>
+            <li>Most homes have a garage space for between 1-3 cars. With 2 car garages being the most common.
+                However, high-value properties are more associated with 3 car garages
+            </li>
+            <li>Interestingly, the price of properties with 4 or 5 car garages begins to slope down, although
+                there are not enough data points in these two categories to infer meaningful insights.
+            </li>
+            <li>An ANOVA test confirms that garage capacity are is a significant predictor of price. Therefore, reject
+                H₀.
+            </li>
+        </ul>
+        </p>
+    </section>
+
+
+    <hr>
+    <!-- Data Modeling Section -->
+    <section id="data-modeling" class="mb-5">
+        <h4>Data Modeling</h4>
+        <p>The <strong>goal</strong> of this section is to go beyond simple visualizations and statistical tests
+            to uncover the
+            nuanced relationships between independent variables and the dependent variable (sale price). This
+            dataset includes many correlated variables (e.g., Garage Cond, Garage Area, Garage Cars, Garage Qual),
+            which can introduce multicollinearity in regression models. So first task on the agenda is to handle
+            multi-collinearity.</p>
+        <p>This is the original numerical variables list:</p>
+        <section style="display: flex; gap: 20px;">
+            <div style="background-color: #007BFF; color: #ffffff; padding: 15px; border-radius: 5px; font-size: 19px;
+    max-height: 300px; overflow-y: auto; margin-bottom: 20px">
+        <pre>
+Lot Frontage      float64
+Lot Area          int64
+Overall Qual      int64
+Overall Cond      int64
+Year Built        int64
+Year Remod/Add    int64
+Mas Vnr Area      float64
+BsmtFin SF 1      float64
+BsmtFin SF 2      float64
+Bsmt Unf SF       float64
+Total Bsmt SF     float64
+1st Flr SF        int64
+2nd Flr SF        int64
+Low Qual Fin SF   int64
+Gr Liv Area       int64
+Bsmt Full Bath    float64
+Bsmt Half Bath    float64
+Full Bath         int64
+Half Bath         int64
+Bedroom AbvGr     int64
+Kitchen AbvGr     int64
+TotRms AbvGrd     int64
+Fireplaces        int64
+Garage Yr Blt     float64
+Garage Cars       float64
+Garage Area       float64
+Wood Deck SF      int64
+Open Porch SF     int64
+Enclosed Porch    int64
+3Ssn Porch        int64
+Screen Porch      int64
+Pool Area         int64
+Misc Val          int64
+Mo Sold           int64
+Yr Sold           int64
+SalePrice         int64
+        </pre>
+            </div>
+        </section>
+        <p>However, if you recall, we engineered 2 unique variables from their counterparts: <strong>TotalSQFT, and
+            TotalBaths</strong>.
+            So from these these three variables, we can remove the following variables:</p>
+        <section style="display: flex; gap: 20px;">
+            <div style="background-color: #007BFF; color: #ffffff; padding: 15px; border-radius: 5px; font-size: 19px;
+    max-height: 300px; overflow-y: auto; margin-bottom: 20px">
+        <pre>
+BsmtFin SF 1      float64
+BsmtFin SF 2      float64
+Bsmt Unf SF       float64
+Total Bsmt SF     float64
+1st Flr SF        int64
+2nd Flr SF        int64
+Low Qual Fin SF   int64
+Gr Liv Area       int64
+Bsmt Full Bath    float64
+Bsmt Half Bath    float64
+Full Bath         int64
+Half Bath         int64
+        </pre>
+            </div>
+        </section>
+        <p>After removal, we are left with:</p>
+        <section style="display: flex; gap: 20px;">
+            <div style="background-color: #007BFF; color: #ffffff; padding: 15px; border-radius: 5px; font-size: 19px;
+    max-height: 300px; overflow-y: auto; margin-bottom: 20px">
+        <pre>
+Bedroom AbvGr     int64
+Kitchen AbvGr     int64
+TotRms AbvGrd     int64
+Fireplaces        int64
+Garage Yr Blt     float64
+Garage Cars       float64
+Garage Area       float64
+Wood Deck SF      int64
+Open Porch SF     int64
+Enclosed Porch    int64
+3Ssn Porch        int64
+Screen Porch      int64
+Pool Area         int64
+Misc Val          int64
+Mo Sold           int64
+Yr Sold           int64
+SalePrice         int64
+Year Remod/Add    int64
+Mas Vnr Area      float64
+Lot Frontage      float64
+Lot Area          int64
+Overall Qual      int64
+Overall Cond      int64
+        </pre>
+            </div>
+        </section>
+        <p>Based on the remaining numerical variables, only the following variables are experiencing
+            multi-collinearity (corr > .7). As a solution, we can drop the <strong>garage area</strong> variable from
+            our
+            variable list. </p>
+        <p>Now that we've handled multi-collinearity, let's start off with a basic regression model to establish a
+            baseline:</p>
+        <img src="{{ url_for('static', filename='images/vanilla_regression_result.jpg') }}"
+             alt="Regression Result" class="img-fluid rounded shadow">
+        <br>
+        <section>
+            <p><strong>Dependent Variable:</strong> The model is designed to predict <em>AdjustedSalePrice</em></p>
+
+            <p><strong>R-squared (0.930):</strong> This metric quantifies the proportion of variability in <em>AdjustedSalePrice</em>
+                explained by the predictors in the model. A value of 93% indicates the model provides an excellent fit
+                to the data. However, this high value warrants scrutiny for potential overfitting, especially with a
+                large number of predictors.</p>
+
+            <p><strong>Adjusted R-squared (0.924):</strong> This adjusted metric accounts for the inclusion of 191
+                predictors, penalizing the addition of variables that do not significantly improve the model's
+                explanatory power. The minimal difference between
+                <em>R²</em> and Adjusted <em>R²</em> suggests that most predictors contribute meaningful information,
+                though some may still be redundant or insignificant.</p>
+
+            <p><strong>F-statistic</strong> (148.0) and <strong>Prob</strong> (F-statistic = 0.00):</p>
+            <ul>
+                <li>The F-statistic tests the joint null hypothesis that all regression coefficients (excluding the
+                    intercept) are zero.
+                </li>
+                <li>A high value of 148 and a p-value of 0.00 strongly reject this null hypothesis, indicating that at
+                    least one predictor significantly explains variation in <em>AdjustedSalePrice</em>.
+                </li>
+                <li>The magnitude of the F-statistic reflects the collective explanatory strength of the model.</li>
+            </ul>
+
+            <p><strong>Number of Observations (2326):</strong> The sample size provides robust statistical power,
+                reducing the likelihood of Type II errors. However, with 191 predictors, the ratio of predictors to
+                observations (approximately 1:12) should be monitored to avoid overparameterization.</p>
+
+            <p><strong>Degrees of Freedom (Df</strong>):</p>
+            <ul>
+                <li>Df Residuals (2134): Indicates the number of independent observations remaining after estimating 191
+                    model parameters. A large residual degree of freedom ensures stable parameter estimates.
+                </li>
+                <li>Df Model (191): Represents the number of predictors, reflecting the model's complexity. With this
+                    many predictors, multicollinearity and overfitting risks must be addressed.
+                </li>
+            </ul>
+            <p>The OLS regression model provides a strong explanation of the variability in AdjustedSalePrice, with an
+                R^2 of 93% and an adjusted R^2
+                of 92.4%, indicating excellent predictive power while accounting for the large number of predictors. The
+                model is statistically significant overall, as evidenced by an F-statistic of 148 and a corresponding
+                p-value of 0.00, which strongly rejects the null hypothesis that all predictors have no effect on
+                AdjustedSalePrice. However, the complexity of the model, with 191 predictors and a
+                predictor-to-observation ratio of approximately 1:12, warrants careful evaluation of multi-collinearity
+                and overfitting.</p>
+            <p>To refine this model, let's build the model again, this time removing insignificant (variables with
+                p-value < .05)</p>
+            <p>Based on the result of the initial regression model, the following variables has a p-value of < 0.05
+                (and will therefore, be dropped):</p>
+            <section style="display: flex; gap: 20px;">
+                <div style="background-color: #007BFF; color: #ffffff; padding: 15px; border-radius: 5px; font-size: 19px;
+    max-height: 300px; overflow-y: auto; margin-bottom: 20px">
+                <pre>
+Lot Shape
+Utilities
+Land Slope
+Year Remod/Add
+Exter Cond
+Bsmt Cond
+BsmtFin Type 2
+Electrical
+Kitchen AbvGr
+Fireplace Qu
+Garage Yr Built
+Garage Finish
+Garage Qual
+Garage Cond
+Paved Drive
+Open Porch SF
+Enclosed Porch
+3Ssn Porch
+Fence
+Misc Val
+Mo Sold
+MS Zoning
+Street
+Alley
+Roof Style
+Heating
+Misc Feature
+        </pre>
+                </div>
+            </section>
+            <p>After dropping the insignificant variables and re-running model again, this is the result:</p>
+            <img src="{{ url_for('static', filename='images/refined_vanilla_regression.jpg') }}"
+                 alt="Refined Regression Result" class="img-fluid rounded shadow">
+            <br>
+            <p>After removing the redundant variables, the predictive power of the model remains largely unaffected, as
+                evidenced by the negligible difference between the R^2 and Adjusted R^2
+                . This demonstrates that the excluded variables contributed little to explaining the variance in the
+                dependent variable, reaffirming the validity of the remaining predictors. Additionally, the reduction in
+                the number of parameters from 191 to 150 has significantly simplified the model, improving its
+                interpretability and reducing the risk of overfitting. By focusing only on the most meaningful
+                variables, the model strikes a balance between simplicity and statistical robustness, ensuring it
+                remains both computationally efficient and generalizable to new data. </p>
+            <p>While reducing the model parameters to 150 is a step in the right direction, it is still relatively high
+                for practical use, particularly if the goal is to serialize the model for deployment in real-world
+                applications, such as predicting property prices using Zillow data. A simpler, more parsimonious model
+                would streamline predictions and ensure ease of implementation in systems with limited computational
+                resources. However, this simplification often comes with a trade-off—sacrificing some predictive power
+                for practicality. Therefore, it is crucial to evaluate priorities: whether to prioritize a complex yet
+                highly accurate model or a more practical, lightweight model that balances efficiency and usability.</p>
+            <p>My next step in simplifying the model involves removing all categorical variables from the regression.
+                Based on my observations, the majority of categorical variables are statistically insignificant, with
+                only a few showing meaningful relationships with the dependent variable. Retaining these variables adds
+                unnecessary complexity without substantially improving the model's predictive power. By excluding them,
+                the model can focus solely on the numerical predictors that are more relevant and impactful, further
+                simplifying its structure while maintaining its validity for practical applications. This approach will
+                also streamline model serialization and deployment for real-world use cases, such as property price
+                prediction.</p>
+            <p>After dropping all categorical variables, and insignificant numerical variables this is
+                the result of the regression: </p>
+            <img src="{{ url_for('static', filename='images/refined_numerical_regression.jpg') }}"
+                 alt="Refined Numerical Regression Result" class="img-fluid rounded shadow">
+            <br>
+            <p>We successfully reduced number of predictors from 191 to just 17,
+                significantly simplifying its structure. The R^2
+                value is now 87.1%, with an Adjusted R^2
+                of 87%, indicating a slight reduction in predictive power. However, considering the drastic reduction in
+                complexity, this sacrifice is relatively minor and well worth the improved practicality. This
+                streamlined model is far more suitable for real-world applications, such as predicting property prices.
+                The next step is to assess whether these remaining predictors correspond to information readily
+                available for properties listed on Zillow, ensuring the model's feasibility for deployment.</p>
+        </section>
+
+        <section>
+            <p>Using <a href="https://www.zillow.com/homedetails/1604-Wheeler-Dr-Ames-IA-50010/93952588_zpid/"
+                        target="_blank">this zillow listing</a> as an example, the following table highlights how the
+                property details from Zillow are mapped to the regression model variables:</p>
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                <tr style="background-color: #007BFF; color: white;">
+                    <th style="padding: 10px; border: 1px solid #ccc;">Model Variable</th>
+                    <th style="padding: 10px; border: 1px solid #ccc;">Zillow Information</th>
+                    <th style="padding: 10px; border: 1px solid #ccc;">Notes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Year Built</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">1975</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Directly listed in Zillow.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Bedroom AbvGr</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">3</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Listed under Bedrooms.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Kitchen AbvGr</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">1</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed to be 1 based on data.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">TotalSQFT</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">2,050 sqft</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Sum of above and below ground living areas.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">TotalBaths</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">2.0</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Calculated from full and 3/4 bathrooms.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">TotRms AbvGrd</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">6</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Counted based on listed main-level rooms.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Fireplaces</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">0</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed absent as not mentioned.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Garage Yr Blt</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">1975</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed to match Year Built.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Garage Cars</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">1</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed based on garage presence.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Wood Deck SF</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Unknown</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Listed as a feature but no size provided.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Screen Porch</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">0</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed absent as not mentioned.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Yr Sold</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">2025</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Based on listing year.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Year Remod/Add</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">1975</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed no remodeling occurred.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Mas Vnr Area</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">0</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Assumed no masonry veneer.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Lot Frontage</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Unknown</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Not listed; may need estimation.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Lot Area</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">10,018 sqft</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Directly listed in Zillow.</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Overall Qual</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Unknown</td>
+                    <td style="padding: 10px; border: 1px solid #ccc;">Subjective; requires estimation.</td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
+            <p>
+                Based on the mapping above, it appears that only Lot Frontage and Wood Deck SF should be considered for
+                removal, as it
+                lacks a clear assumption or direct mapping from available property data (e.g., Zillow). While it can be
+                imputed with a median value to retain consistency in the dataset, doing so might introduce noise or
+                reduce
+                model interpretability. Instead, excluding Lot Frontage and Wood Deck SF simplifies the model further
+                while
+                only sacrificing a small amount of predictive power (reduced R^2 by .004), ensuring that the model
+                remains
+                practical and easy to deploy with real-world property data.
+            </p>
+            <p>Now that we've decided on the significant predictors of properties, let's experiment with various
+                predictive models, to see which yields the highest R^2 before we serialize the model.</p>
+            <img src="{{ url_for('static', filename='images/metric_comparison.jpg') }}"
+                 alt="Refined Numerical Regression Result" class="img-fluid rounded shadow">
+            <br>
+            <p>Given that XGBoost outperformed other models, the next step is to serialize the XGBoost model using
+                joblib. Once serialized, we can turn it into an API that allows you to input property details, such as
+                those from Zillow, and predict property prices seamlessly. This approach ensures that the model is both
+                portable and easily deployable for real-world use. </p>
+        </section>
+
+<section class="container text-center my-5">
+    <a href="/predict" class="btn btn-primary btn-lg shadow-sm">
+        Go to predictor
+    </a>
+</section>
+
+</section>
+
+
+</main>
+</body>
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 Langvid Phalra. All rights reserved.</p>
+</footer>
+<!-- End Footer -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</html>
