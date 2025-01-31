@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NY Real Estate Optimization Model</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">ePortfolio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/aboutMe">About Me</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/ePortfolio">ePortfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/gitHub" target="_blank">GitHub</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Header -->
+<header class="bg-primary text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-6 mb-3 fw-semibold">Optimizing Company Structure for Profit</h1>
+        <p class="lead mb-0">Maximizing NPV for Real Estate Operations</p>
+    </div>
+</header>
+<!-- End Header -->
+
+<!-- Main Content -->
+<main class="container my-5">
+    <!-- Project Overview -->
+    <section class="mb-5">
+        <h4>Project Overview</h4>
+        <p>
+            In this project, we are developing an optimization model to optimize the company structure under the
+            objective function of maximizing the net present value (NPV) of profits over the next eight quarters. The
+            model considers key decision variables such as market penetration, commission rates, employee headcount, and
+            office space requirements. By balancing these factors against constraints like operating budgets and market
+            conditions, the model helps identify the optimal business structure for maximizing profitability.
+        </p>
+    </section>
+    <!-- End Project Overview -->
+
+    <!-- Objective Function -->
+    <section class="mb-5">
+        <h4>Objective Function</h4>
+        <p>
+            The primary objective is to maximize the NPV of profits over eight quarters. Quarterly sales forecasts are
+            based on historical transaction data, while quarterly cash flows are derived from revenue (commission on
+            sales)
+            and operating costs (rent, utilities, and employee salaries). The formula for NPV is:
+        </p>
+        <p><strong>NPV = Σ (Quarterly Profit / (1 + 0.015)<sup>t</sup>)</strong></p>
+        <p>
+            Where the discount rate is 1.5% per quarter, based on a 6% annual internal rate of return (IRR).
+        </p>
+    </section>
+    <!-- End Objective Function -->
+
+    <!-- Constraints -->
+    <section class="mb-5">
+        <h4>Constraints</h4>
+        <ul>
+            <li><strong>Budget Constraint:</strong> The total monthly operating budget is capped at $15,000.</li>
+            <li><strong>Market Penetration:</strong> The baseline market penetration is 5.5%, with adjustments based
+                on the commission rate. Market penetration can vary between 4% and 5% depending on commission changes.
+            </li>
+            <li><strong>Office Rent:</strong> The office must occupy at least 250 square feet, plus 125 square feet
+                per employee. Rent is calculated as 1.5% of the average price per square foot, paid monthly.
+            </li>
+            <li><strong>Employee Cost:</strong> Up to three employees can be hired, with each employee costing $65,000
+                annually.
+            </li>
+            <li><strong>Revenue:</strong> Revenue is determined by market penetration, commission rate, and quarterly
+                sales forecasts.
+            </li>
+        </ul>
+    </section>
+    <!-- End Constraints -->
+
+    <!-- Decision Variables -->
+    <section class="mb-5">
+        <h4>Decision Variables</h4>
+        <p>
+            The optimization model evaluates the following decision variables to determine the best configuration for
+            maximizing NPV:
+        </p>
+        <ul>
+            <li><strong>Number of Employees:</strong> Between 0 and 3 employees.</li>
+            <li><strong>Office Size:</strong> Base size of 250 square feet, with an additional 125 square feet per
+                employee.
+            </li>
+            <li><strong>Commission Rate:</strong> Adjustable between 4% and 5%, affecting both revenue and market
+                penetration.
+            </li>
+        </ul>
+    </section>
+    <!-- End Decision Variables -->
+
+    <!-- Findings and Insights -->
+    <section class="mb-5">
+        <h4>Findings and Insights</h4>
+        <p>The model produced the following optimal configuration:</p>
+        <ul>
+            <li><strong>Max NPV:</strong> $1,783,025</li>
+            <li><strong>Number of Extra Employees:</strong> 0</li>
+            <li><strong>Optimal Commission Rate:</strong> 5%</li>
+            <li><strong>Optimal Office Size:</strong> 250 square feet</li>
+        </ul>
+        <p>
+            By adhering to the model's recommendations, the company can maximize profitability while remaining within
+            operational constraints. This approach ensures efficient allocation of resources and data-driven
+            decision-making.
+        </p>
+    </section>
+    <!-- End Findings and Insights -->
+
+</main>
+<!-- End Main Content -->
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 Langvid Phalra. All rights reserved.</p>
+</footer>
+<!-- End Footer -->
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
